@@ -6,7 +6,8 @@
 
 > 🎙️ 基于 [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) 封装的 Rich 终端交互工具，支持 CustomVoice / VoiceDesign / VoiceClone / Design→Clone 全链路工作流。
 
-![Preview](docs/preview.png)
+<img width="2560" height="1092" alt="QQ_1779957201611" src="https://github.com/user-attachments/assets/45887e19-f070-48eb-864d-ee4c0174c56e" />
+
 
 ## ✨ 特性
 
@@ -70,7 +71,7 @@ python qwen3_tts_tui.py
 ## 📁 项目结构
 
 ```
-qwen3-tts-tui/
+voice-studio/
 ├── qwen3_tts_tui.py      # 主程序
 ├── requirements.txt       # Python 依赖
 ├── README.md              # 说明文档
