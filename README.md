@@ -1,7 +1,8 @@
 
+<h1 align="center">Qwen3-TTS Rich TUI</h1>
 
 <div align="center">
-# Qwen3-TTS Rich TUI
+
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
