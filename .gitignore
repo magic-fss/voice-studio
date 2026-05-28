@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 项目运行时生成
+.qwen_tts_tui.json
+output/
+*.wav
+*.mp3
+
+# 模型文件（如果放在项目目录内）
+models/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# 系统文件
+.DS_Store
+Thumbs.db
