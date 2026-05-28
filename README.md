@@ -1,8 +1,12 @@
 # Qwen3-TTS Rich TUI
 
-| |
-|:--:|
-| [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org) [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE) [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)](https://pytorch.org) |
+<div align="center">
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)](https://pytorch.org)
+
+</div>
 
 > 🎙️ 基于 [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) 封装的 Rich 终端交互工具，支持 CustomVoice / VoiceDesign / VoiceClone / Design→Clone 全链路工作流。
 
