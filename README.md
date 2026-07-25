@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><strong>Qwen3-TTS Web</strong></h1>
+  <h1><strong>Voice-Studio</strong></h1>
 </div>
 
 <p align="center">
