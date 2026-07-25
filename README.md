@@ -1,4 +1,6 @@
+<p align="center">
 # Qwen3-TTS Web
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white" alt="Python">
