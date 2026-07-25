@@ -1,0 +1,10 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+torch>=2.2.0
+soundfile>=0.12.1
+qwen-tts
+aiofiles>=23.2.1
+websockets>=12.0

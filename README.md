@@ -1,160 +1,84 @@
+# Qwen3-TTS Web
 
-<h1 align="center">Qwen3-TTS Rich TUI</h1>
+Qwen3-TTS 的完整 Web 界面，包含 FastAPI 后端与 React 前端。
 
-<div align="center">
+## 项目结构
 
-
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)](https://pytorch.org)
-
-</div>
-
-> 🎙️ 基于 [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) 封装的 Rich 终端交互工具，支持 CustomVoice / VoiceDesign / VoiceClone / Design→Clone 全链路工作流。
-
-<img width="2560" height="1092" alt="QQ_1779957201611" src="https://github.com/user-attachments/assets/45887e19-f070-48eb-864d-ee4c0174c56e" />
-
-
-## ✨ 特性
-
-- **🎨 精美 TUI**：基于 [Rich](https://github.com/Textualize/rich) 的终端界面，ASCII 艺术字、进度条、表格全支持
-- **🗣️ 四种模式**：
-  - **CustomVoice**：9 种预设高品质音色（中英日韩等多语言）
-  - **VoiceDesign**：自然语言描述生成任意声音
-  - **VoiceClone**：参考音频克隆音色
-  - **Design→Clone**：先设计声音，再固化复用
-- **⚡ 模型缓存**：LRU 风格缓存，避免重复加载，支持显存清理
-- **📝 配置持久化**：JSON 配置文件保存在脚本同目录，随项目迁移
-- **🌐 本地/在线模型**：支持 HuggingFace ID 或本地绝对路径
-- **🔢 编号菜单**：说话人、语言选择改为编号式，附带中文释义
-- **⌨️ 全局快捷键**：任意界面输入 `q` 返回主菜单，按 `Enter` 确认返回
-- **🧹 自动清屏**：启动及返回主菜单时自动清屏，保持界面整洁
-
-## 📦 环境要求
-
-| 项目 | 最低要求 | 推荐配置 |
-|------|---------|---------|
-| Python | 3.8+ | 3.10+ |
-| CUDA | 11.8+ | 12.1+ |
-| VRAM | 8GB | 16GB+ |
-| 系统 | Windows 10/11 / Linux / macOS | Windows 11 |
-
-> ⚠️ **注意**：`soundfile` 依赖系统级音频库，Windows 用户需先安装 [SoX](http://sox.sourceforge.net/) 或 [libsndfile](https://github.com/libsndfile/libsndfile/releases)。
-
-## 🚀 快速开始
-
-### 1. 克隆仓库
-
-```bash
-git clone https://github.com/magic-fss/voice-studio.git
-cd voice-studio
+```
+qwen3-tts-web/
+├── backend/          FastAPI 后端
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config.py
+│   │   ├── models.py
+│   │   ├── routers/
+│   │   └── services/
+│   └── run.py
+├── frontend/         React + Vite + Tailwind 前端
+│   ├── src/
+│   └── package.json
+└── README.md
 ```
 
-### 2. 安装依赖
+## 功能
+
+- **CustomVoice**: 预设音色生成（9位内置说话人）
+- **VoiceDesign**: 描述式声音设计
+- **VoiceClone**: 参考音频克隆（支持本地上传/URL/base64）
+- **Design → Clone**: 先设计再复用的组合工作流
+- **文件库**: 管理生成的音频文件
+- **设置**: 在线修改模型路径、设备、精度等配置
+- **模型缓存**: 自动复用已加载模型，支持手动清理
+
+## 安装与运行
+
+### 1. 后端
 
 ```bash
+cd backend
 pip install -r requirements.txt
+python run.py
 ```
 
-### 3. 下载模型（可选，支持在线加载）
+后端默认运行在 `http://localhost:8000`，自动提供 API 文档：`http://localhost:8000/docs`
 
-从 [HuggingFace](https://huggingface.co/Qwen) 下载所需模型到本地目录：
-
-```
-D:\models\HuggingFace\
-├── Qwen3-TTS-12Hz-1.7B-Base
-├── Qwen3-TTS-12Hz-1.7B-CustomVoice
-├── Qwen3-TTS-12Hz-1.7B-VoiceDesign
-└── Qwen3-TTS-12Hz-1.7B-Tokenizer
-```
-
-### 4. 运行
+### 2. 前端
 
 ```bash
-python qwen3_tts_tui.py
+cd frontend
+npm install
+npm run dev
 ```
 
-## 📁 项目结构
+前端默认运行在 `http://localhost:5173`，已配置代理自动转发 `/api` 到后端。
 
-```
-voice-studio/
-├── qwen3_tts_tui.py      # 主程序
-├── requirements.txt       # Python 依赖
-├── README.md              # 说明文档
-├── .gitignore             # Git 忽略规则
-├── .qwen_tts_tui.json     # 本地配置文件（自动生成）
-└── output/                # 默认音频输出目录
+### 生产构建
+
+```bash
+cd frontend
+npm run build
 ```
 
-## 🎮 使用指南
+构建产物在 `frontend/dist/`，可通过后端挂载静态文件或单独部署。
 
-### 主菜单
+## 配置说明
 
-```
-╔═══════╤══════════════════╤═════════════════════════════════════════╗
-║   1   │ CustomVoice      │ 预设高品质音色（9种角色）               ║
-║   2   │ VoiceDesign      │ 自然语言描述生成声音                    ║
-║   3   │ VoiceClone       │ 参考音频克隆音色                        ║
-║   4   │ Design → Clone   │ 先设计声音，再固化复用                  ║
-║   5   │ ⚙ 设置           │ 自定义模型路径 / 输出目录 / 设备        ║
-║   6   │ 🗑 清理缓存       │ 释放模型显存缓存                        ║
-║   0   │ 退出             │ 保存配置并退出程序                      ║
-╚═══════╧══════════════════╧═════════════════════════════════════════╝
-```
+首次运行时会在 `backend/.qwen_tts_web.json` 生成默认配置，包含模型路径与推理参数。请在**设置页面**或手动修改该 JSON 文件以适配你的环境。
 
-### 全局快捷键
+## API 概览
 
-| 按键 | 作用 |
-|------|------|
-| `q` | 任意界面返回主菜单 |
-| `Enter` | 确认 / 返回主菜单 |
-| `Ctrl+C` | 强制退出 |
-
-### 配置说明
-
-首次运行后会在脚本同目录生成 `.qwen_tts_tui.json`：
-
-```json
-{
-  "customvoice_model": "D:\\models\\HuggingFace\\Qwen3-TTS-12Hz-1.7B-CustomVoice",
-  "voicedesign_model": "D:\\models\\HuggingFace\\Qwen3-TTS-12Hz-1.7B-VoiceDesign",
-  "clone_model": "D:\\models\\HuggingFace\\Qwen3-TTS-12Hz-1.7B-Base",
-  "tokenizer_model": "D:\\models\\HuggingFace\\Qwen3-TTS-12Hz-1.7B-Tokenizer",
-  "output_dir": "E:\\个人项目\\qwen3-tts\\output",
-  "device": "cuda:0",
-  "dtype": "bfloat16",
-  "attn_impl": "sdpa",
-  "auto_save_config": true
-}
-```
-
-可通过 **选项 5 → 设置菜单** 交互式修改，或直接编辑 JSON 文件。
-
-## 🛠️ 开发相关
-
-### 技术栈
-
-- **后端**：PyTorch + Qwen3-TTS
-- **TUI**：Rich（Console / Table / Progress / Prompt / Panel）
-- **音频**：soundfile（WAV 读写）
-
-### 自定义模型路径
-
-修改 `qwen3_tts_tui.py` 中 `DEFAULT_CONFIG` 字典，或使用设置菜单（选项 5）：
-
-```python
-DEFAULT_CONFIG = {
-    "customvoice_model": r"你的本地路径或HF ID",
-    "output_dir": r"你的输出目录",
-    # ...
-}
-```
-
-## 📄 许可证
-
-[MIT License](LICENSE)
-
-## 🙏 致谢
-
-- [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS) — 阿里巴巴通义千问团队
-- [Rich](https://github.com/Textualize/rich) — Textualize 终端美化库
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/config` | 获取配置 |
+| POST | `/api/config` | 更新配置 |
+| GET | `/api/speakers` | 获取说话人列表 |
+| GET | `/api/languages` | 获取语言列表 |
+| POST | `/api/generate/custom-voice` | CustomVoice 生成 |
+| POST | `/api/generate/voice-design` | VoiceDesign 生成 |
+| POST | `/api/generate/voice-clone` | VoiceClone 生成 |
+| POST | `/api/generate/design-then-clone` | Design→Clone 工作流 |
+| POST | `/api/cache/clear` | 清理模型缓存 |
+| GET | `/api/files/list` | 文件列表 |
+| GET | `/api/files/download/{filename}` | 下载文件 |
+| POST | `/api/files/upload` | 上传文件 |
+| DELETE | `/api/files/delete/{filename}` | 删除文件 |

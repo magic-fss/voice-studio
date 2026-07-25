@@ -25,17 +25,26 @@ venv/
 env/
 ENV/
 
+# 前端
+node_modules/
+
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
+# 环境变量
+.env
+.env.*
+
 # 项目运行时生成
 .qwen_tts_tui.json
+.qwen_tts_web.json
 output/
 *.wav
 *.mp3
+*.log
 
 # 模型文件（如果放在项目目录内）
 models/
