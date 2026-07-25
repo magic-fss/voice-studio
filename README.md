@@ -58,6 +58,17 @@ voice-studio/
 
 ---
 
+## 项目截图
+<img width="2544" height="1430" alt="image" src="https://github.com/user-attachments/assets/adc22683-d004-4908-9e78-02c4d742a05b" />
+
+<img width="2544" height="1430" alt="image" src="https://github.com/user-attachments/assets/6b24a513-ccda-4713-971b-013560ffdd98" />
+
+<img width="2544" height="1430" alt="image" src="https://github.com/user-attachments/assets/6211fef7-e9b4-4596-99d2-2832152784c2" />
+
+<img width="2544" height="1430" alt="image" src="https://github.com/user-attachments/assets/50784e5c-c94f-45ce-84ee-42b2c426182a" />
+
+---
+
 ## 技术栈
 
 | 层级 | 技术 |
