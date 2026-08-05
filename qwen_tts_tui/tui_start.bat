@@ -1,0 +1,1 @@
+..\venv\Scripts\python.exe .\qwen3_tts_tui.py

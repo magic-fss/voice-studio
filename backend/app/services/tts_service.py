@@ -1,5 +1,6 @@
 import os
 import base64
+import time
 import tempfile
 import requests
 from pathlib import Path
@@ -73,26 +74,32 @@ class TTSService:
         out_dir = ensure_dir(self.cfg.output_dir)
         lang = language if language and language != "Auto" else None
         inst = instruct if instruct else None
+        ts = int(time.time() * 1000)
         results: List[Path] = []
         if len(texts) == 1:
+            print(f"[TTS] 单条合成 | 文本: '{texts[0]}' | 说话人: {speaker} | 语言: {lang} | 指令: {inst}")
             wavs, sr = model.generate_custom_voice(
                 text=texts[0],
                 language=lang,
                 speaker=speaker,
                 instruct=inst,
             )
-            out_path = out_dir / f"custom_{speaker}_0.wav"
+            print(f"[TTS] 生成完成 | 音频形状: {wavs[0].shape} | 采样率: {sr} | 时长: {len(wavs[0])/sr:.2f}s")
+            out_path = out_dir / f"custom_{speaker}_{ts}.wav"
             sf.write(str(out_path), wavs[0], sr)
             results.append(out_path)
         else:
+            print(f"[TTS] 批量合成 | 文本数: {len(texts)} | 说话人: {speaker} | 语言: {lang} | 指令: {inst}")
+            print(f"[TTS] 文本列表: {texts}")
             wavs, sr = model.generate_custom_voice(
                 text=texts,
-                language=[lang] * len(texts),
+                language=[language] * len(texts) if language and language != "Auto" else ["Auto"] * len(texts),
                 speaker=[speaker] * len(texts),
-                instruct=[inst] * len(texts),
+                instruct=[instruct] * len(texts) if instruct else [""] * len(texts),
             )
             for i, w in enumerate(wavs):
-                out_path = out_dir / f"custom_{speaker}_batch_{i:03d}.wav"
+                print(f"[TTS] 第{i}条生成完成 | 音频形状: {w.shape} | 时长: {len(w)/sr:.2f}s")
+                out_path = out_dir / f"custom_{speaker}_{ts}_{i:03d}.wav"
                 sf.write(str(out_path), w, sr)
                 results.append(out_path)
         return results
@@ -105,6 +112,7 @@ class TTSService:
     ) -> List[Path]:
         model = self._get_model(self.cfg.voicedesign_model, "VoiceDesign")
         out_dir = ensure_dir(self.cfg.output_dir)
+        ts = int(time.time() * 1000)
         results: List[Path] = []
         if len(texts) == 1:
             wavs, sr = model.generate_voice_design(
@@ -112,7 +120,7 @@ class TTSService:
                 language=language,
                 instruct=instruct,
             )
-            out_path = out_dir / "voice_design_000.wav"
+            out_path = out_dir / f"voice_design_{ts}.wav"
             sf.write(str(out_path), wavs[0], sr)
             results.append(out_path)
         else:
@@ -122,7 +130,7 @@ class TTSService:
                 instruct=[instruct] * len(texts),
             )
             for i, w in enumerate(wavs):
-                out_path = out_dir / f"voice_design_{i:03d}.wav"
+                out_path = out_dir / f"voice_design_{ts}_{i:03d}.wav"
                 sf.write(str(out_path), w, sr)
                 results.append(out_path)
         return results
@@ -145,6 +153,7 @@ class TTSService:
             x_vector_only_mode=x_vector_only,
         )
         lang = language if language and language != "Auto" else None
+        ts = int(time.time() * 1000)
         results: List[Path] = []
         if len(texts) == 1:
             wavs, sr = model.generate_voice_clone(
@@ -152,7 +161,7 @@ class TTSService:
                 language=lang,
                 voice_clone_prompt=prompt_items,
             )
-            out_path = out_dir / "voice_clone_000.wav"
+            out_path = out_dir / f"voice_clone_{ts}.wav"
             sf.write(str(out_path), wavs[0], sr)
             results.append(out_path)
         else:
@@ -162,7 +171,7 @@ class TTSService:
                 voice_clone_prompt=prompt_items,
             )
             for i, w in enumerate(wavs):
-                out_path = out_dir / f"voice_clone_{i:03d}.wav"
+                out_path = out_dir / f"voice_clone_{ts}_{i:03d}.wav"
                 sf.write(str(out_path), w, sr)
                 results.append(out_path)
         return results
@@ -178,7 +187,8 @@ class TTSService:
         design_model = self._get_model(self.cfg.voicedesign_model, "VoiceDesign")
         clone_model = self._get_model(self.cfg.clone_model, "VoiceClone")
         out_dir = ensure_dir(self.cfg.output_dir)
-        ref_path = out_dir / "voice_design_reference.wav"
+        ts = int(time.time() * 1000)
+        ref_path = out_dir / f"voice_design_reference_{ts}.wav"
         ref_wavs, sr = design_model.generate_voice_design(
             text=ref_text,
             language=ref_language,
@@ -197,7 +207,7 @@ class TTSService:
                 language=lang,
                 voice_clone_prompt=prompt_items,
             )
-            out_path = out_dir / "design_clone_000.wav"
+            out_path = out_dir / f"design_clone_{ts}.wav"
             sf.write(str(out_path), wavs[0], sr)
             results.append(out_path)
         else:
@@ -207,7 +217,7 @@ class TTSService:
                 voice_clone_prompt=prompt_items,
             )
             for i, w in enumerate(wavs):
-                out_path = out_dir / f"design_clone_{i:03d}.wav"
+                out_path = out_dir / f"design_clone_{ts}_{i:03d}.wav"
                 sf.write(str(out_path), w, sr)
                 results.append(out_path)
         return ref_path, results
