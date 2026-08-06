@@ -1,7 +1,9 @@
+from pathlib import Path
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import FileResponse
 from typing import List
 
-from ..config import AppConfig, load_config, save_config
+from ..config import AppConfig, load_config, save_config, CONFIG_PATH
 from ..models import (
     CustomVoiceRequest,
     VoiceDesignRequest,
@@ -149,6 +151,15 @@ def design_then_clone(req: DesignThenCloneRequest, cfg: AppConfig = Depends(get_
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/speaker/audio/{speaker_name}")
+def get_speaker_audio(speaker_name: str):
+    project_root = CONFIG_PATH.parent.parent
+    audio_path = project_root / "speaker" / f"custom_{speaker_name}.wav"
+    if not audio_path.exists() or not audio_path.is_file():
+        raise HTTPException(status_code=404, detail="试音文件不存在")
+    return FileResponse(str(audio_path), media_type="audio/wav")
 
 
 @router.post("/cache/clear")

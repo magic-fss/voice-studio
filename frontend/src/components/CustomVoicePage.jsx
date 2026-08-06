@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { api, extractFilename } from '../api';
 import { Play, Loader2, Plus, Trash2, Wand2, ArrowUpRight, Volume2 } from 'lucide-react';
 import { MagneticButton, TiltCard, Reveal, SplitText } from './interactions';
@@ -13,6 +13,8 @@ export default function CustomVoicePage() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
+  const [playingSpeaker, setPlayingSpeaker] = useState(null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     api.getSpeakers().then((data) => {
@@ -52,6 +54,32 @@ export default function CustomVoicePage() {
   };
 
   const selectedSpeakerInfo = speakers.find((s) => s.name === speaker);
+
+  const handlePreview = (speakerName) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (playingSpeaker === speakerName) {
+      setPlayingSpeaker(null);
+      return;
+    }
+    const audio = new Audio(`/api/speaker/audio/${speakerName}`);
+    audioRef.current = audio;
+    audio.play().then(() => {
+      setPlayingSpeaker(speakerName);
+    }).catch(() => {
+      setPlayingSpeaker(null);
+    });
+    audio.onended = () => {
+      setPlayingSpeaker(null);
+      audioRef.current = null;
+    };
+    audio.onerror = () => {
+      setPlayingSpeaker(null);
+      audioRef.current = null;
+    };
+  };
 
   return (
     <div className="space-y-10 animate-fade-in-up">
@@ -151,9 +179,29 @@ export default function CustomVoicePage() {
 
             {selectedSpeakerInfo && (
               <div className="mt-5 p-4 rounded-xl bg-bg-card border border-border-subtle flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-accent-bg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Volume2 className="w-4 h-4 text-accent" strokeWidth={1.75} />
-                </div>
+                <button
+                  onClick={() => handlePreview(selectedSpeakerInfo.name)}
+                  className="flex flex-col items-center gap-1 flex-shrink-0 mt-0.5 group/preview"
+                >
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
+                    playingSpeaker === selectedSpeakerInfo.name
+                      ? 'bg-accent text-black'
+                      : 'bg-accent-bg text-accent group-hover/preview:bg-accent group-hover/preview:text-black'
+                  }`}>
+                    {playingSpeaker === selectedSpeakerInfo.name ? (
+                      <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.75} />
+                    ) : (
+                      <Play className="w-4 h-4" strokeWidth={1.75} />
+                    )}
+                  </div>
+                  <span className={`text-[10px] font-medium transition-colors ${
+                    playingSpeaker === selectedSpeakerInfo.name
+                      ? 'text-accent'
+                      : 'text-text-muted group-hover/preview:text-accent'
+                  }`}>
+                    试音
+                  </span>
+                </button>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-[14px] text-text-primary">
                     {selectedSpeakerInfo.name}
