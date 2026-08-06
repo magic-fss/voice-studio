@@ -1,4 +1,6 @@
-# Qwen3-TTS Web
+<div align="center">
+  <h1><strong>Voice-Studio</strong></h1>
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white" alt="Python">
